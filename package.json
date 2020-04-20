@@ -1,0 +1,24 @@
+{
+  "name": "bab-pdf",
+  "version": "1.0.0",
+  "description": "",
+  "engines": {
+    "node": ">=0.12"
+  },
+  "main": "index.js",
+  "scripts": {
+    "compile": "tsc src/*.ts",
+    "run": "node src/pdf-update.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "pdf-lib": "^1.4.1",
+    "typescript": "^3.8.3"
+  },
+  "devDependencies": {
+    "@types/node": "^13.13.0",
+    "prettier": "^2.0.4"
+  }
+}
