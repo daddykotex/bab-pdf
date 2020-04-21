@@ -44,10 +44,10 @@ async function parseForm(req: NextApiRequest): Promise<Files> {
 async function process(req: NextApiRequest): Promise<Uint8Array> {
   const files = await parseForm(req);
   const firstFile = Object.values(files)[0];
-  if (!firstFile) {
+  if (!firstFile || firstFile.size <= 0) {
     return Promise.reject({
       code: 302,
-      loc: '/?error="File not found in the request"',
+      loc: "/?error=file_not_found",
     });
   }
 
