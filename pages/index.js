@@ -15,11 +15,7 @@ export default function Home() {
           Upload a CSV with two columns and get a PDF.
         </p>
 
-        <form
-          encType="multipart/form-data"
-          action="/api/submit-form"
-          method="POST"
-        >
+        <form encType="multipart/form-data" action="/api/form" method="POST">
           <input type="file" name="file" file_extension="csv"></input>
           <button type="submit">Upload</button>
         </form>

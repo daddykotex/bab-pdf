@@ -10,7 +10,7 @@ export const config = {
   },
 };
 
-function csvIntoArray(
+async function csvIntoArray(
   stream: CsvParserStream<Row, Row>
 ): Promise<Array<LabelData>> {
   return new Promise((resolve, reject) => {
@@ -28,7 +28,7 @@ function csvIntoArray(
   });
 }
 
-function parseForm(req: NextApiRequest): Promise<Files> {
+async function parseForm(req: NextApiRequest): Promise<Files> {
   const form = new IncomingForm();
   return new Promise((resolve, reject) => {
     form.parse(req, (err, fields: Fields, files: Files) => {
@@ -41,16 +41,40 @@ function parseForm(req: NextApiRequest): Promise<Files> {
   });
 }
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+async function process(req: NextApiRequest): Promise<Uint8Array> {
   const files = await parseForm(req);
   const firstFile = Object.values(files)[0];
   if (!firstFile) {
-    return Promise.resolve(res.status(200).send("No file found."));
+    return Promise.reject({
+      code: 302,
+      loc: '/?error="File not found in the request"',
+    });
   }
 
   const stream = parseFile(firstFile.path, { headers: true });
-
   const values = await csvIntoArray(stream);
-  const pdfBytes = await buildPdf(values);
-  return res.status(200).send(pdfBytes);
+  return buildPdf(values);
+}
+
+export default async (req: NextApiRequest, res: NextApiResponse) => {
+  return process(req)
+    .then((pdfBytes) => {
+      res.setHeader("Content-disposition", 'attachment; filename="labels.pdf');
+      res.setHeader("Content-Type", "application/pdf");
+      res.end(Buffer.from(pdfBytes));
+      return;
+    })
+    .catch((err) => {
+      if (err.code && err.loc) {
+        console.log("Not found");
+        res.writeHead(err.code, {
+          Location: err.loc,
+        });
+        res.end();
+      } else {
+        console.error(err);
+        res.writeHead(500);
+        res.end("Oops");
+      }
+    });
 };
