@@ -20,15 +20,20 @@ function splitString(text: string, maxWidth: number): Array<string> {
   return text.match(new RegExp(`.{1,${maxWidth}}`, "g"));
 }
 
+function sanitizeString(test: string): string {
+  return test.replace(/[^a-z0-9áéíóúñüêë \.,_-]/gim, "").trim();
+}
+
 async function addOne(label: Label, page: PDFPage, font: PDFFont) {
   const textSize = 12;
   const fromTop = topPadding + label.x * 250;
   const fromLeft = leftPadding + label.y * 300;
 
   splitString(label.data.message, maxWidthCharacters).forEach((line, index) => {
-    const lineWidth = font.widthOfTextAtSize(line, textSize);
+    const sanitized = sanitizeString(line);
+    const lineWidth = font.widthOfTextAtSize(sanitized, textSize);
     const lineY = index * 15;
-    page.drawText(line, {
+    page.drawText(sanitized, {
       x: fromLeft - lineWidth / 2,
       y: page.getHeight() - fromTop - lineY,
       size: textSize,

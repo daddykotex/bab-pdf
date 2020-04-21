@@ -59,8 +59,10 @@ async function process(req: NextApiRequest): Promise<Uint8Array> {
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   return process(req)
     .then((pdfBytes) => {
-      res.setHeader("Content-disposition", 'attachment; filename="labels.pdf');
-      res.setHeader("Content-Type", "application/pdf");
+      res.writeHead(200, {
+        "Content-disposition": 'attachment; filename="labels.pdf',
+        "Content-Type": "application/pdf",
+      });
       res.end(Buffer.from(pdfBytes));
       return;
     })
