@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { parseFile, CsvParserStream } from "fast-csv";
 import { Row } from "@fast-csv/parse";
 import { LabelData, buildPdf } from "../../lib/pdf-update";
+import { sanitizeString } from "../../lib/text";
 
 export const config = {
   api: {
@@ -17,9 +18,12 @@ async function csvIntoArray(
     const rows: Array<LabelData> = [];
     stream
       .on("data", (data) => {
-        const message = data["Notes - From Buyer"].trim();
+        const raw = data["Notes - From Buyer"];
         const id = data["Order - Number"].trim();
-        rows.push({ id, message });
+        const message = sanitizeString(raw);
+        if (message && message.length > 0) {
+          rows.push({ id, message });
+        }
       })
       .on("end", () => {
         resolve(rows);

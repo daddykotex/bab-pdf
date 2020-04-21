@@ -1,6 +1,5 @@
 import { PDFDocument, rgb, StandardFonts, PDFPage, PDFFont } from "pdf-lib";
-import * as fs from "fs";
-import * as path from "path";
+import { splitString } from "./text";
 
 export type LabelData = {
   message: string;
@@ -15,14 +14,7 @@ type Label = {
 
 const topPadding = 45;
 const leftPadding = 145;
-const maxWidthCharacters = "une belle journée! Attention que Art ne".length;
-function splitString(text: string, maxWidth: number): Array<string> {
-  return text.match(new RegExp(`.{1,${maxWidth}}`, "g"));
-}
-
-function sanitizeString(test: string): string {
-  return test.replace(/[^a-z0-9áéíóúñüêë \.,_-]/gim, "").trim();
-}
+const maxWidthCharacters = 40;
 
 async function addOne(label: Label, page: PDFPage, font: PDFFont) {
   const textSize = 12;
@@ -30,10 +22,10 @@ async function addOne(label: Label, page: PDFPage, font: PDFFont) {
   const fromLeft = leftPadding + label.y * 300;
 
   splitString(label.data.message, maxWidthCharacters).forEach((line, index) => {
-    const sanitized = sanitizeString(line);
-    const lineWidth = font.widthOfTextAtSize(sanitized, textSize);
+    const alphanumericLine = line.replace(/[^a-z0-9]/gi, " "); //only alpha to check the length
+    const lineWidth = font.widthOfTextAtSize(alphanumericLine, textSize);
     const lineY = index * 15;
-    page.drawText(sanitized, {
+    page.drawText(line, {
       x: fromLeft - lineWidth / 2,
       y: page.getHeight() - fromTop - lineY,
       size: textSize,
