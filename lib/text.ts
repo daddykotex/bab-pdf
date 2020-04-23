@@ -27,14 +27,17 @@ export function splitString(text: string, maxWidth: number): Array<string> {
       if (word.length > maxWidth) {
         const splited = word.match(new RegExp(`.{1,${maxWidth}}`, "g"));
         strings.push(...splited);
-      }
-      if (currentString.length + word.length > maxWidth) {
-        strings.push(currentString);
+      } else if (currentString.length + word.length > maxWidth) {
+        strings.push(currentString.trim());
         currentString = word;
       } else {
-        currentString += " " + word;
+        currentString += word + " ";
       }
     });
+
+    if (currentString.length > 0) {
+      strings.push(currentString.trim());
+    }
 
     return strings;
   }

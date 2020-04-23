@@ -1,4 +1,4 @@
-import { sanitizeString } from "./text";
+import { sanitizeString, splitString } from "./text";
 
 const tests = [
   ["dummy string", "asd", "asd"],
@@ -78,4 +78,10 @@ tests.forEach(([name, value, expectation]) => {
   test(`sanitize: ${name}`, () => {
     expect(sanitizeString(value)).toEqual(expectation);
   });
+});
+
+test(`splistring: tata`, () => {
+  expect(
+    splitString("Hope you have a sweet day! Miss you, Ashley ", 40)
+  ).toEqual(["Hope you have a sweet day! Miss you,", "Ashley"]);
 });
