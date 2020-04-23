@@ -25,13 +25,25 @@ async function addOne(label: Label, page: PDFPage, font: PDFFont) {
     const alphanumericLine = line.replace(/[^a-z0-9]/gi, " "); //only alpha to check the length
     const lineWidth = font.widthOfTextAtSize(alphanumericLine, textSize);
     const lineY = index * 15;
-    page.drawText(line, {
-      x: fromLeft - lineWidth / 2,
-      y: page.getHeight() - fromTop - lineY,
-      size: textSize,
-      font: font,
-      color: rgb(0, 0, 0),
-    });
+    try {
+      page.drawText(line, {
+        x: fromLeft - lineWidth / 2,
+        y: page.getHeight() - fromTop - lineY,
+        size: textSize,
+        font: font,
+        color: rgb(0, 0, 0),
+      });
+    } catch (err) {
+      // the line contains nonvalid characters, best effort to keep only relevant stuff
+      const clean = line.replace(/[^a-zA-Z0-9A-zÀ-ú _\-]/g, " ");
+      page.drawText(clean, {
+        x: fromLeft - lineWidth / 2,
+        y: page.getHeight() - fromTop - lineY,
+        size: textSize,
+        font: font,
+        color: rgb(0, 0, 0),
+      });
+    }
   });
 
   const lineWidth = font.widthOfTextAtSize(label.data.id, textSize);

@@ -1,11 +1,7 @@
 export function sanitizeString(test: string): string {
   return test
     .replace("’", "'")
-    .replace(
-      /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g,
-      ""
-    )
-    .replace(/\uFE0F/g, "")
+    .replace("œ", "oe")
     .replace(/<br\/>custom_language: true/g, "")
     .replace(/<br\/>language: \w*/g, "")
     .replace(/<br\/>mc_cid: \w*/g, "")
@@ -29,7 +25,7 @@ export function splitString(text: string, maxWidth: number): Array<string> {
         strings.push(...splited);
       } else if (currentString.length + word.length > maxWidth) {
         strings.push(currentString.trim());
-        currentString = word;
+        currentString = word + " ";
       } else {
         currentString += word + " ";
       }

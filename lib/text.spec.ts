@@ -14,13 +14,13 @@ const tests = [
   ],
   [
     "language",
-    "De délicieuses gâteries pour ensoleiller nos journées 😊☀️🌈💕<br/>language: ly23145",
+    "De délicieuses gâteries pour ensoleiller nos journées<br/>language: ly23145",
     "De délicieuses gâteries pour ensoleiller nos journées",
   ],
   ["language custom", "<br/>custom_language: true<br/>language: ly23145", ""],
   [
     "coeur",
-    "merci pour les belles nuits, t’aim ♥️<br/>language: ly23145<br/>custom_language: true",
+    "merci pour les belles nuits, t’aim<br/>language: ly23145<br/>custom_language: true",
     "merci pour les belles nuits, t'aim",
   ],
   [
@@ -60,15 +60,15 @@ T'es bonne,
 T'es fine,
 T'es capable!!!
 
-Lâche pas la cousine!!! Je sais que tu travailles fort en ce moment et que tu as pas beaucoup de temps pour toi, alors laisse-toi gâter! 😉
+Lâche pas la cousine!!! Je sais que tu travailles fort en ce moment et que tu as pas beaucoup de temps pour toi, alors laisse-toi gâter!
 
-J't'aime fort!! ❤️💜❤️<br/>custom_language: true<br/>language: ly23145`,
+J't'aime fort!!<br/>custom_language: true<br/>language: ly23145`,
     `T'es belle,
 T'es bonne,
 T'es fine,
 T'es capable!!!
 
-Lâche pas la cousine!!! Je sais que tu travailles fort en ce moment et que tu as pas beaucoup de temps pour toi, alors laisse-toi gâter! 
+Lâche pas la cousine!!! Je sais que tu travailles fort en ce moment et que tu as pas beaucoup de temps pour toi, alors laisse-toi gâter!
 
 J't'aime fort!!`,
   ],
@@ -76,7 +76,19 @@ J't'aime fort!!`,
 
 tests.forEach(([name, value, expectation]) => {
   test(`sanitize: ${name}`, () => {
-    expect(sanitizeString(value)).toEqual(expectation);
+    const sanitized = sanitizeString(value);
+    // console.log(
+    //   Array.from(sanitized)
+    //     .map((c) => [c, c.charCodeAt(0)])
+    //     .join(", ")
+    // );
+    // console.log("=====");
+    // console.log(
+    //   Array.from(expectation)
+    //     .map((c) => [c, c.charCodeAt(0)])
+    //     .join(", ")
+    // );
+    expect(sanitized).toEqual(expectation);
   });
 });
 
@@ -84,4 +96,23 @@ test(`splistring: tata`, () => {
   expect(
     splitString("Hope you have a sweet day! Miss you, Ashley ", 40)
   ).toEqual(["Hope you have a sweet day! Miss you,", "Ashley"]);
+});
+
+test(`splistring: tata2`, () => {
+  expect(
+    splitString(
+      `Petite douceur pour vos cœurs
+Merci d'être fidèle au poste et de représenter le plus beau métier du monde même en ces temps plus difficiles
+Gros câlin à deuxième famille
+Myriam xox`,
+      40
+    )
+  ).toEqual([
+    "Petite douceur pour vos cœurs",
+    "Merci d'être fidèle au poste et de",
+    "représenter le plus beau métier du monde",
+    "même en ces temps plus difficiles",
+    "Gros câlin à deuxième famille",
+    "Myriam xox",
+  ]);
 });
