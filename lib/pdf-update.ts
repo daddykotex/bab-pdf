@@ -12,7 +12,7 @@ type Label = {
   y: number;
 };
 
-const topPadding = 45;
+const topPadding = 70;
 const leftPadding = 145;
 const maxWidthCharacters = 40;
 
