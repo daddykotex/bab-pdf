@@ -1,4 +1,4 @@
-import { IncomingForm, Files, Fields } from "formidable";
+import { IncomingForm, Files, Fields, File as FFile } from "formidable";
 import { NextApiRequest, NextApiResponse } from "next";
 import { parseFile, CsvParserStream } from "fast-csv";
 import { Row } from "@fast-csv/parse";
@@ -47,8 +47,19 @@ async function parseForm(req: NextApiRequest): Promise<Files> {
 
 async function process(req: NextApiRequest): Promise<Uint8Array> {
   const files = await parseForm(req);
-  const firstFile = Object.values(files)[0];
-  if (!firstFile || firstFile.size <= 0) {
+  let firstFile: FFile | undefined;
+  const temp = Object.values(files)[0];
+  if (temp) {
+    if (Array.isArray(temp)) {
+      if (temp.length >= 0) {
+        firstFile = temp[0];
+      }
+    } else {
+      firstFile = temp;
+    }
+  }
+
+  if (!firstFile) {
     return Promise.reject({
       code: 302,
       loc: "/?error=file_not_found",
