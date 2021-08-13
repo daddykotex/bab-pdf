@@ -18,7 +18,7 @@
     "@fast-csv/parse": "^4.3.6",
     "fast-csv": "^4.3.6",
     "formidable": "^1.2.2",
-    "next": "9.3.5",
+    "next": "11.1.0",
     "pdf-lib": "^1.10.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
