@@ -16,7 +16,7 @@ export default function Home() {
         </p>
 
         <form encType="multipart/form-data" action="/api/form" method="POST">
-          <input type="file" name="file" file_extension="csv"></input>
+          <input type="file" name="file" accept=".csv"></input>
           <button type="submit">Upload</button>
         </form>
       </main>
