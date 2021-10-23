@@ -75,7 +75,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   return process(req)
     .then((pdfBytes) => {
       res.writeHead(200, {
-        "Content-disposition": 'attachment; filename="labels.pdf',
+        "Content-disposition": 'attachment; filename="labels.pdf"',
         "Content-Type": "application/pdf",
       });
       res.end(Buffer.from(pdfBytes));
