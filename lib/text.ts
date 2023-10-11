@@ -22,7 +22,9 @@ export function splitString(text: string, maxWidth: number): Array<string> {
     line.split(" ").forEach((word) => {
       if (word.length > maxWidth) {
         const splited = word.match(new RegExp(`.{1,${maxWidth}}`, "g"));
-        strings.push(...splited);
+        if (splited) {
+          strings.push(...splited);
+        }
       } else if (currentString.length + word.length > maxWidth) {
         strings.push(currentString.trim());
         currentString = word + " ";
